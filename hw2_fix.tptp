@@ -1,0 +1,105 @@
+fof(equivalence, conjecture,
+((?[X] : (p(X) & ![Y,Z] : ((p(Y) & p(Z)) => (Y=Z)))) <=>
+(?[X] : (p(X) & ![Y] : (p(Y) => (Y=X)))))).
+
+% Running in auto input_syntax mode. Trying TPTP
+% Refutation found. Thanks to Tanya!
+% SZS status Theorem for hw2
+% SZS output start Proof for hw2
+%1.?[X0]:(![X1,X2]:((p(X2)&p(X1))=>X1=X2)&p(X0))<=>
+%?[X0]:(![X1]:(p(X1)=>X0=X1)&p(X0))[input(conjecture)]
+%2.~(?[X0]:(![X1,X2]:((p(X2)&p(X1))=>X1=X2)&p(X0))<=>
+%?[X0]:(![X1]:(p(X1)=>X0=X1)&p(X0)))[negatedconjecture1]
+%3.~(?[X0]:(![X1,X2]:((p(X2)&p(X1))=>X1=X2)&p(X0))<=>
+%?[X3]:(![X4]:(p(X4)=>X3=X4)&p(X3)))[rectify2]
+%4.?[X0]:(![X1,X2]:(X1=X2|(~p(X2)|~p(X1)))&p(X0))<~>
+%?[X3]:(![X4]:(X3=X4|~p(X4))&p(X3))[ennftransformation3]
+%5.?[X0]:(![X1,X2]:(X1=X2|~p(X2)|~p(X1))&p(X0))<~>
+%?[X3]:(![X4]:(X3=X4|~p(X4))&p(X3))[flattening4]
+%6.sP0<=>?[X0]:(![X1,X2]:(X1=X2|~p(X2)|~p(X1))&p(X0))
+%[predicatedefinitionintroduction]
+%7.sP0<~>?[X3]:(![X4]:(X3=X4|~p(X4))&p(X3))[definitionfolding5,6]
+%8.(sP0|![X0]:(?[X1,X2]:(X1!=X2&p(X2)&p(X1))|~p(X0)))&
+%(?[X0]:(![X1,X2]:(X1=X2|~p(X2)|~p(X1))&p(X0))|~sP0)
+%[nnftransformation6]
+%9.(sP0|![X0]:(?[X1,X2]:(X1!=X2&p(X2)&p(X1))|~p(X0)))&
+%(?[X3]:(![X4,X5]:(X4=X5|~p(X5)|~p(X4))&p(X3))|~sP0)[rectify8]
+%10.?[X1,X2]:(X1!=X2&p(X2)&p(X1))=>(sK1!=sK2&p(sK2)&p(sK1))[choiceaxiom]
+%11.?[X3]:(![X4,X5]:(X4=X5|~p(X5)|~p(X4))&p(X3))=>
+%(![X4,X5]:(X4=X5|~p(X5)|~p(X4))&p(sK3))[choiceaxiom]
+%12.(sP0|![X0]:((sK1!=sK2&p(sK2)&p(sK1))|~p(X0)))&
+%((![X4,X5]:(X4=X5|~p(X5)|~p(X4))&p(sK3))|~sP0)[skolemisation9,11,10]
+%13.(![X3]:(?[X4]:(X3!=X4&p(X4))|~p(X3))|~sP0)&
+%(?[X3]:(![X4]:(X3=X4|~p(X4))&p(X3))|sP0)[nnftransformation7]
+%14.(![X0]:(?[X1]:(X0!=X1&p(X1))|~p(X0))|~sP0)&
+%(?[X2]:(![X3]:(X2=X3|~p(X3))&p(X2))|sP0)[rectify13]
+%15.![X0]:(?[X1]:(X0!=X1&p(X1))=>(sK4(X0)!=X0&p(sK4(X0))))[choiceaxiom]
+%16.?[X2]:(![X3]:(X2=X3|~p(X3))&p(X2))=>
+%(![X3]:(sK5=X3|~p(X3))&p(sK5))[choiceaxiom]
+%17.(![X0]:((sK4(X0)!=X0&p(sK4(X0)))|~p(X0))|~sP0)&
+%((![X3]:(sK5=X3|~p(X3))&p(sK5))|sP0)[skolemisation14,16,15]
+%18. p(sK3) | ~sP0 [cnf transformation 12]
+%19. X4 = X5 | ~p(X5) | ~p(X4) | ~sP0 [cnf transformation 12]
+%20. sP0 | p(sK1) | ~p(X0) [cnf transformation 12]
+%21. sP0 | p(sK2) | ~p(X0) [cnf transformation 12]
+%22. sP0 | sK1 != sK2 | ~p(X0) [cnf transformation 12]
+%23. p(sK5) | sP0 [cnf transformation 17]
+%24. sK5 = X3 | ~p(X3) | sP0 [cnf transformation 17]
+%25. p(sK4(X0)) | ~p(X0) | ~sP0 [cnf transformation 17]
+%26. sK4(X0) != X0 | ~p(X0) | ~sP0 [cnf transformation 17]
+%28. 1 <=> sP0 [avatar definition]
+%32. 2 <=> p(sK5) [avatar definition]
+%34. p(sK5) <- (2) [avatar component clause 32]
+%35. 1 | 2 [avatar split clause 23,32,28]
+%37. 3 <=> ! [X3] : (sK5 = X3 | ~p(X3)) [avatar definition]
+%38. ~p(X3) | sK5 = X3 <- (3) [avatar component clause 37]
+%39. 1 | 3 [avatar split clause 24,37,28]
+%41. 4 <=> ! [X0] : (p(sK4(X0)) | ~p(X0)) [avatar definition]
+%42. p(sK4(X0)) | ~p(X0) <- (4) [avatar component clause 41]
+%43. ~1 | 4 [avatar split clause 25,41,28]
+%45. 5 <=> ! [X0] : (sK4(X0) != X0 | ~p(X0)) [avatar definition]
+%46. sK4(X0) != X0 | ~p(X0) <- (5) [avatar component clause 45]
+%47. ~1 | 5 [avatar split clause 26,45,28]
+%49. 6 <=> p(sK3) [avatar definition]
+%51. p(sK3) <- (6) [avatar component clause 49]
+%52. ~1 | 6 [avatar split clause 18,49,28]
+%54. 7 <=> ! [X4,X5] : (X4 = X5 | ~p(X4) | ~p(X5)) [avatar definition]
+%55. ~p(X5) | ~p(X4) | X4 = X5 <- (7) [avatar component clause 54]
+%56. ~1 | 7 [avatar split clause 19,54,28]
+%58. 8 <=> ! [X0] : ~p(X0) [avatar definition]
+%59. ~p(X0) <- (8) [avatar component clause 58]
+%61. 9 <=> p(sK1) [avatar definition]
+%63. p(sK1) <- (9) [avatar component clause 61]
+%64. 8 | 9 | 1 [avatar split clause 20,28,61,58]
+%66. 10 <=> p(sK2) [avatar definition]
+%68. p(sK2) <- (10) [avatar component clause 66]
+%69. 8 | 10 | 1 [avatar split clause 21,28,66,58]
+%71. 11 <=> sK1 = sK2 [avatar definition]
+%73. sK1 != sK2 <- (~11) [avatar component clause 71]
+%74. 8 | ~11 | 1 [avatar split clause 22,28,71,58]
+%76. $false <- (2, 8) [resolution 59,34]
+%77. ~2 | ~8 [avatar contradiction clause 76]
+%78. sK1 = sK5 <- (3, 9) [resolution 63,38]
+%79. sK2 = sK5 <- (3, 10) [resolution 68,38]
+%80. sK1 = sK2 <- (3, 9, 10) [forward demodulation 79,78]
+%81. $false <- (3, 9, 10, ~11) [subsumption resolution 80,73]
+%82. ~3 | ~9 | ~10 | 11 [avatar contradiction clause 81]
+%86. ~p(X1) | sK4(X1) = X0 | ~p(X0) <- (4, 7) [resolution 55,42]
+%91. ~p(X0) | sK4(sK3) = X0 <- (4, 6, 7) [resolution 86,51]
+%108. sK3 = sK4(sK3) <- (4, 6, 7) [resolution 91,51]
+%110. sK3 != sK3 | ~p(sK3) <- (4, 5, 6, 7) [superposition 46,108]
+%112. ~p(sK3) <- (4, 5, 6, 7) [trivial inequality removal 110]
+%113. $false <- (4, 5, 6, 7) [subsumption resolution 112,51]
+%114. ~4 | ~5 | ~6 | ~7 [avatar contradiction clause 113]
+%115. $false [avatar sat refutation 35,39,43,47,52,56,64,69,74,77,82,114]
+% SZS output end Proof for hw2
+% ------------------------------
+% Version: Vampire 5.0.0 (Release build, commit 55c27f5 
+% on 2025-09-09 16:15:20 +0100)
+% Linked with Z3 4.14.0.0 3c47fd96cf5645d0c42b2c819d9e9a84380aa721 NOTFOUND
+% Termination reason: Refutation
+
+% Time elapsed: 0.442 s
+% Peak memory usage: 15 MB
+% ------------------------------
+% ------------------------------
