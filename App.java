@@ -73,30 +73,46 @@ public class App {
 
         if(verificarLugar == null){
             System.out.println("\nEl lugar no esta registrado.\n");
+            return;
         }
-        else{
-            System.out.print("Destino: ");
-                String destino = teclado.nextLine(); 
-            Lugar verificarLugar_2 = null; // Objeto temporal 
-            for(int i=0; i<arr_lugares.size(); i++){
-                if (arr_lugares.get(i).getNombreLugar().trim().equalsIgnoreCase(destino)){
-                    verificarLugar_2 = arr_lugares.get(i); 
-                }
-            }
 
-            if(verificarLugar_2 == null){
-                System.out.println("\nEl lugar no esta registrado.\n");
-            }
-            else{
-                System.out.print("Tiempo de viaje (min): ");
-                    float tiempo = teclado.nextFloat();
-                arr_conexiones.add(new Conexion(origen, destino, tiempo));
+        System.out.print("Destino: ");
+            String destino = teclado.nextLine(); 
 
-                // Bidirreccionalidad de la conexion 
-                arr_conexiones.add();
-                System.out.println("\nConexion registrada exitosamente.\n"); 
+        Lugar verificarLugar_2 = null; // Objeto temporal 
+        for(int i=0; i<arr_lugares.size(); i++){
+            if (arr_lugares.get(i).getNombreLugar().trim().equalsIgnoreCase(destino)){
+                verificarLugar_2 = arr_lugares.get(i); 
             }
         }
+
+        if(verificarLugar_2 == null){
+            System.out.println("\nEl lugar no esta registrado.\n");
+            return;
+        }
+
+        boolean existencia = false; 
+        for(int i=0; i<arr_conexiones.size(); i++){
+            Conexion tmp = arr_conexiones.get(i);
+            if(tmp.getOrigen().equalsIgnoreCase(origen)){
+                existencia = true; 
+                break;
+            }
+        }
+
+        if(existencia == true){
+            System.out.println("\nLa conexion ya existe.\n");
+            return;
+        }
+
+        System.out.print("Tiempo de viaje (min): ");
+            float tiempo = teclado.nextFloat();
+            teclado.nextLine();
+        arr_conexiones.add(new Conexion(origen, destino, tiempo));
+
+        // Bidirreccionalidad de la conexion 
+        arr_conexiones.add(new Conexion(destino, origen, tiempo));
+        System.out.println("\nConexion registrada exitosamente.\n"); 
     }
 
     // Metodo para registrar turistas - Opcion 3 del menu
@@ -128,7 +144,67 @@ public class App {
         else{
             System.out.println("\nEl Turista ya esta registrado.\n");
         }
-
     }
 
+    // Metodo para mostrar todos los lugares registrados - Opcion 5 del menu
+    public void mostrarLugares(){
+        System.out.println("\n== Ciudades Registradas ==");
+
+        if(arr_lugares.isEmpty()){
+            System.out.println("No hay lugares registrados.\n");
+            return;
+        }
+
+        for(int i=0; i<arr_lugares.size(); i++){
+            Lugar lugar = arr_lugares.get(i);
+            String intereses = String.join(", ", lugar.getInteresesLugar());
+            
+            System.out.println((i+1) + ". " + lugar.getNombreLugar() + " || " + 
+                               lugar.getDescripcionLugar() + " || " + "Intereses: " +
+                               intereses + " || " + "Estado: " + lugar.getEstado());
+        }
+    }
+
+    // Metodo para mostrar todas las conexiones registradas - Opcion 6 del menu
+    public void mostrarConexiones(){
+        System.out.println("\n== Conexiones Registradas ==");
+
+        if(arr_conexiones.isEmpty()){
+            System.out.println("No hay lugares registrados.\n");
+            return;
+        }
+
+        for(int i=0; i<arr_conexiones.size(); i++){
+            Conexion conexion = arr_conexiones.get(i);
+
+            System.out.println(conexion.getOrigen() + " <-> " + conexion.getDestino() + 
+                               " || Tiempo: " + conexion.getTiempo());
+        }
+    }
+
+    // Metodo para mostrar solo los lugares abiertos - Opcion 7 del menu
+    public void mostrarLugaresAbiertos(){
+        System.out.println("\n== Ciudades Abiertas ==");
+
+        if(arr_lugares.isEmpty()){
+            System.out.println("No hay lugares registrados.\n");
+            return;
+        }
+
+        boolean lugaresAbiertos = false;
+        for(int i=0; i<arr_lugares.size(); i++){
+            Lugar lugar = arr_lugares.get(i);
+
+            if(lugar.getEstado().equalsIgnoreCase("abierta")){
+                lugaresAbiertos = true;
+
+                lugar = arr_lugares.get(i);
+                String intereses = String.join(", ", lugar.getInteresesLugar());
+            
+                System.out.println((i+1) + ". " + lugar.getNombreLugar() + " || " + 
+                                    lugar.getDescripcionLugar() + " || " + "Intereses: " +
+                                    intereses + " || " + "Estado: " + lugar.getEstado());
+            }
+        }
+    }
 }

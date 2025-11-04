@@ -16,7 +16,9 @@ public class Menu {
         int opcion = 1; 
 
         while(opcion != 0){
-            System.out.println("\n=== SISTEMA DE RUTAS TURISTICAS ===\n");
+            System.out.println("\n===================================");
+            System.out.println("   SISTEMA DE RUTAS TURISTICAS");
+            System.out.println("===================================\n");
             System.out.println("Opciones:");
             System.out.println(" 0 - Guardar y salir");
             System.out.println(" 1 - Registrar lugares"); 
@@ -25,7 +27,7 @@ public class Menu {
             System.out.println(" 4 - Registrar rutas");
             System.out.println(" 5 - Mostrar lugares");
             System.out.println(" 6 - Mostrar conexiones");
-            System.out.println(" 7 - Mostrar lugares abiertas");
+            System.out.println(" 7 - Mostrar lugares abiertos");
             System.out.println(" 8 - Recomendar destinos");
             System.out.println(" 9 - Lugares conectados");
             System.out.println("10 - Mostrar rutas");
@@ -35,6 +37,7 @@ public class Menu {
             // Verifica que el usuario escriba un numero entero
             if(teclado.hasNextInt()){ 
                 opcion = teclado.nextInt();
+                teclado.nextLine();
 
                 if(opcion < 0 || opcion > 11){
                     System.out.println("\nOpcion invalida.");
@@ -68,6 +71,21 @@ public class Menu {
             // Opcion 3: registrar nuevos turistas
             if(opcion == 3){
                 app.registrarTurista();
+            }
+
+            // Opcion 5: mostrar lugares
+            if(opcion == 5){
+                app.mostrarLugares();
+            }
+
+            // Opcion 6: mostrar conexiones
+            if(opcion == 6){
+                app.mostrarConexiones();
+            }
+
+            // Opcion 7: mostrar solo lugares abiertos
+            if(opcion == 7){
+                app.mostrarLugaresAbiertos();
             }
         }
     }

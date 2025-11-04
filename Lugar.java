@@ -12,4 +12,11 @@ public class Lugar extends EntidadTuristica {      // Herencia entre clases
     }
 
     // Getters y Setters 
+    public String[] getInteresesLugar(){
+        return interesesLugar;
+    }
+
+    public String getEstado(){
+        return estado;
+    }
 }

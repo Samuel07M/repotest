@@ -13,5 +13,15 @@ public class Conexion {
     }
 
     // Getters y Setters 
-    
+    public String getOrigen(){
+        return origen;
+    }
+
+    public String getDestino(){
+        return destino;
+    }
+
+    public float getTiempo(){
+        return tiempo;
+    }
 }
