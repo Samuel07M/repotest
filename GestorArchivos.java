@@ -14,7 +14,7 @@ public class GestorArchivos {
     FileReader fr; 
     Scanner archivo; 
 
-    //Constructor 
+    // Constructor 
     public GestorArchivos(){
         fw = null;
         pw = null; 
@@ -22,7 +22,10 @@ public class GestorArchivos {
         archivo = null; 
     }
 
-    // Metodos para guardar los datos
+    // ===========================
+    // Métodos para guardar datos
+    // ===========================
+
     public void guardarLugares(ArrayList<Lugar> arr_lugares){
         try{
             fw = new FileWriter("lugares.txt"); 
@@ -42,7 +45,7 @@ public class GestorArchivos {
             pw.close();
 
         }catch(Exception e){
-            System.err.println("\nError.\n");
+            System.err.println("\nError guardando lugares: " + e.getMessage() + "\n");
         }
     }
 
@@ -55,6 +58,7 @@ public class GestorArchivos {
             for(int i = 0; i < arr_conexiones.size(); i++){
                 Conexion conexion = arr_conexiones.get(i);
                 pw.println(conexion.getOrigen() + "|" + conexion.getDestino() + "|" + conexion.getTiempo());
+                pw.flush();
             }
 
             System.out.println("\nConexiones guardadas exitosamente.\n");
@@ -63,7 +67,7 @@ public class GestorArchivos {
             pw.close();
 
         }catch(Exception e){
-            System.err.println("\nError.\n");
+            System.err.println("\nError guardando conexiones: " + e.getMessage() + "\n");
         }
     }
 
@@ -77,7 +81,8 @@ public class GestorArchivos {
                 PlanificadorRutas planificadorRutas = arr_planificadorRutas.get(i);
                 String[] ruta_tmp = planificadorRutas.getRuta();
                 String ruta = String.join(",", ruta_tmp);
-                pw.println(ruta);
+                pw.println(planificadorRutas.getOrigen() + "|" + planificadorRutas.getDestino() + "|" + ruta + "|" + planificadorRutas.getTiempo());
+                pw.flush();
             }
 
             System.out.println("\nRutas guardadas exitosamente.\n");
@@ -86,11 +91,14 @@ public class GestorArchivos {
             pw.close();
 
         }catch(Exception e){
-            System.err.println("\nError.\n");
+            System.err.println("\nError guardando rutas: " + e.getMessage() + "\n");
         }
     }
 
-    // Metodos para cargar los datos
+    // ===========================
+    // Métodos para cargar datos
+    // ===========================
+
     public ArrayList<Lugar> cargarLugares(){
         ArrayList<Lugar> arr_lugares = new ArrayList<>();
 
@@ -117,8 +125,11 @@ public class GestorArchivos {
 
             System.out.println("\nLugares cargados exitosamente.\n");
             
+            fr.close();
+            archivo.close();
+
         }catch(Exception e){
-            System.err.println("\nError leyendo el archivo.\n");
+            System.err.println("\nError leyendo lugares: " + e.getMessage() + "\n");
         }
 
         return arr_lugares;
@@ -144,8 +155,11 @@ public class GestorArchivos {
 
             System.out.println("\nConexiones cargadas exitosamente.\n");
 
+            fr.close();
+            archivo.close();
+
         }catch(Exception e){
-            System.err.println("\nError leyendo el archivo.\n");  
+            System.err.println("\nError leyendo conexiones: " + e.getMessage() + "\n");  
         }
         
         return arr_conexiones;
@@ -160,19 +174,26 @@ public class GestorArchivos {
 
             while(archivo.hasNextLine()){
                 String linea = archivo.nextLine();
-                String[] lugares = linea.split(","); // Separar los lugares por ','
-                for(int i=0; i<lugares.length; i++){
-                    lugares[i] = lugares[i].trim().toLowerCase();
-                }
-                if(lugares.length >= 2){
-                    String origen = lugares[0];
-                    String destino = lugares[lugares.length - 1];
-                    arr_planificadorRutas.add(new PlanificadorRutas(origen, destino, lugares));
+                String[] partes = linea.split("\\|"); // Separar por '|'
+                if(partes.length == 4){
+                    String origen = partes[0].trim();
+                    String destino = partes[1].trim();
+                    String[] lugares = partes[2].split(","); // Separar los lugares por ','
+                    for(int i=0; i<lugares.length; i++){
+                        lugares[i] = lugares[i].trim().toLowerCase();
+                    }
+                    float tiempo = Float.parseFloat(partes[3].trim());
+                    arr_planificadorRutas.add(new PlanificadorRutas(origen, destino, lugares, tiempo));
                 }
             }
-            
+
+            System.out.println("\nRutas cargadas exitosamente.\n");
+
+            fr.close();
+            archivo.close();
+        
         }catch(Exception e){
-            System.err.println("\nError leyendo el archivo.\n");  
+            System.err.println("\nError leyendo rutas: " + e.getMessage() + "\n");  
         }
 
         return arr_planificadorRutas;

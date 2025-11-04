@@ -125,12 +125,12 @@ public class Menu {
 
             // Opcion 1: mostrar todas las rutas
             if(opcion == 1){
-
+                app.mostrarRutas();
             }
 
             //opcion 2: filtrar por lugares
             if(opcion == 2){
-
+                app.filtrarRutas();
             }
         }
     }
