@@ -5,8 +5,13 @@ public class App {
     public static void main(String[] args){
         App app = new App();
         Menu menu = new Menu(app); 
+        GestorArchivos gestorArchivos = new GestorArchivos();
 
         menu.mostrarMenu();
+
+        gestorArchivos.guardarLugares(app.arr_lugares);
+        gestorArchivos.guardarConexiones(app.arr_conexiones);
+        gestorArchivos.guardarRutas(app.arr_planificadorRutas);
     }
 
     // Declaracion de entrada de datos 
@@ -14,6 +19,17 @@ public class App {
     ArrayList<Lugar> arr_lugares = new ArrayList<>();
     ArrayList<Turista> arr_turistas = new ArrayList<>();
     ArrayList<Conexion> arr_conexiones = new ArrayList<>();
+    ArrayList<PlanificadorRutas> arr_planificadorRutas = new ArrayList<>();
+
+    // Metodo para cargar datos 
+    public void cargarDatos(){
+        GestorArchivos gestorArchivos = new GestorArchivos();
+        arr_lugares = gestorArchivos.cargarLugares();
+
+        arr_conexiones = gestorArchivos.cargarConexiones();
+
+        arr_planificadorRutas = gestorArchivos.cargarRutas();
+    }
 
     // Metodo para registrar nuevas ciudades - Opcion 1 del menu
     public void registrarLugar(){
@@ -30,7 +46,7 @@ public class App {
         }
 
         if(verificarLugar == null){
-            System.out.print("Intereses turisticos (separados por ,): "); 
+            System.out.print("Intereses turisticos (separados por comas): "); 
                 String interesesTexto = teclado.nextLine(); 
                 String[] interesesLugar_tmp = interesesTexto.split(","); // Separa por comas
                 String[] interesesLugar = new String[interesesLugar_tmp.length];
@@ -91,6 +107,11 @@ public class App {
             return;
         }
 
+        if(origen.equals(destino)){
+            System.out.println("\nNo se puede registrar la conexion de un lugar consigo mismo.\n");
+            return;
+        }
+
         boolean existencia = false; 
         for(int i=0; i<arr_conexiones.size(); i++){
             Conexion tmp = arr_conexiones.get(i);
@@ -124,13 +145,13 @@ public class App {
         // Verificacion de existencia para evitar duplicados
         Turista verificarTurista = null; 
         for(int i=0; i<arr_turistas.size(); i++){
-            if (arr_turistas.get(i).getNombreTurista().trim().equalsIgnoreCase(nombreTurista)){
+            if(arr_turistas.get(i).getNombreTurista().trim().equalsIgnoreCase(nombreTurista)){
                 verificarTurista = arr_turistas.get(i); 
             }
         }
 
         if(verificarTurista == null){
-            System.out.print("Preferencias (separadas por ,): "); 
+            System.out.print("Preferencias (separadas por comas): "); 
                 String preferenciasTexto = teclado.nextLine(); 
                 String[] preferenciasTurista_tmp = preferenciasTexto.split(","); // Separa por comas
                 String[] preferenciasTurista = new String[preferenciasTurista_tmp.length];
@@ -139,10 +160,76 @@ public class App {
                 }
             
             arr_turistas.add(new Turista(nombreTurista, preferenciasTurista));
-            System.err.println("\nTurista registrado exitosamente.\n");
+            System.out.println("\nTurista registrado exitosamente.\n");
         }
         else{
             System.out.println("\nEl Turista ya esta registrado.\n");
+        }
+    }
+
+    // Metodo para registrar rutas - Opcion 4 del menu
+    public void registrarRutas(){
+        System.out.println("\n== Registrar Ruta ==");
+        
+        if(arr_lugares.isEmpty()){
+            System.out.println("\nNo hay lugares registrados.\n");
+            return;
+        }
+
+        System.out.print("Lugares (separados por comas): ");
+            String rutaTexto = teclado.nextLine();
+            String[] rutaTexto_tmp = rutaTexto.split(","); // Separa por comas
+            String[] ruta = new String[rutaTexto_tmp.length];
+            for(int i=0; i<rutaTexto_tmp.length; i++){
+                ruta[i] = rutaTexto_tmp[i].trim().toLowerCase(); // Limpiar espacios en blanco
+            }
+        
+        String origen = ruta[0];
+        String destino = ruta[ruta.length-1];
+
+        boolean origenExistencia = false; 
+        for(int i=0; i<arr_lugares.size(); i++){
+            if(arr_lugares.get(i).getNombreLugar().equalsIgnoreCase(origen)){
+                origenExistencia = true; 
+                break;
+            }
+        }
+
+        boolean destinoExistencia = false; 
+        for(int i=0; i<arr_lugares.size(); i++){
+            if(arr_lugares.get(i).getNombreLugar().equalsIgnoreCase(destino)){
+                destinoExistencia = true; 
+                break;
+            }
+        }
+
+        if(origenExistencia == false){
+            System.out.println("\nEl origen " + origen + " no esta registrado.\n");
+            return;
+        }
+
+        if(destinoExistencia == false){
+            System.out.println("\nEl destino " + destino + " no esta registrado.\n");
+            return;
+        }
+
+        boolean verificarConexion = false;
+        for(int i=0; i<arr_conexiones.size(); i++){
+            Conexion conexion = arr_conexiones.get(i);
+            if(conexion.getOrigen().trim().equalsIgnoreCase(origen) && conexion.getDestino().trim().equalsIgnoreCase(destino)){
+                verificarConexion = true;
+            }
+            if(conexion.getOrigen().trim().equalsIgnoreCase(destino) && conexion.getDestino().trim().equalsIgnoreCase(origen)){
+                verificarConexion = true;
+            }
+        }
+
+        if(verificarConexion == true){
+            arr_planificadorRutas.add(new PlanificadorRutas(origen, destino, ruta));
+            System.out.println("\nRuta registrada exitosamente.\n");
+        }
+        else{
+            System.out.println("\nNo hay conexion entre " + origen + " y " + destino + ".\n");
         }
     }
 
@@ -151,7 +238,7 @@ public class App {
         System.out.println("\n== Ciudades Registradas ==");
 
         if(arr_lugares.isEmpty()){
-            System.out.println("No hay lugares registrados.\n");
+            System.out.println("\nNo hay lugares registrados.\n");
             return;
         }
 
@@ -170,7 +257,7 @@ public class App {
         System.out.println("\n== Conexiones Registradas ==");
 
         if(arr_conexiones.isEmpty()){
-            System.out.println("No hay lugares registrados.\n");
+            System.out.println("\nNo hay lugares registrados.\n");
             return;
         }
 
@@ -187,7 +274,7 @@ public class App {
         System.out.println("\n== Ciudades Abiertas ==");
 
         if(arr_lugares.isEmpty()){
-            System.out.println("No hay lugares registrados.\n");
+            System.out.println("\nNo hay lugares registrados.\n");
             return;
         }
 
@@ -203,8 +290,15 @@ public class App {
             
                 System.out.println((i+1) + ". " + lugar.getNombreLugar() + " || " + 
                                     lugar.getDescripcionLugar() + " || " + "Intereses: " +
-                                    intereses + " || " + "Estado: " + lugar.getEstado());
+                                    intereses);
             }
         }
+
+        if(lugaresAbiertos == false){
+            System.out.println("\nNo hay lugares abiertos.\n");
+        }
     }
+
+    // Metodo para mostrar las rutas - Opcion 10 del menu
+    
 }
