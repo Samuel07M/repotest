@@ -1,4 +1,4 @@
-public class Lugar extends EntidadTuristica{      // Herencia entre clases
+public class Lugar extends EntidadTuristica {      // Herencia entre clases
     
     // Atributos adicionales a los de la superclase
     private String[] interesesLugar;
@@ -12,6 +12,4 @@ public class Lugar extends EntidadTuristica{      // Herencia entre clases
     }
 
     // Getters y Setters 
-    
-
 }

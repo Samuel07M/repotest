@@ -62,13 +62,13 @@ public class Menu {
             }
 
             // Opcion 2: registrar nuevas conexiones
-
+            if(opcion == 2){
+                app.registrarConexion();
+            }
             // Opcion 3: registrar nuevos turistas
             if(opcion == 3){
                 app.registrarTurista();
             }
-
-
         }
     }
 }
