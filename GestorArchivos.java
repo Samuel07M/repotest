@@ -22,10 +22,7 @@ public class GestorArchivos {
         archivo = null; 
     }
 
-    // ===========================
-    // Métodos para guardar datos
-    // ===========================
-
+    // Metodos para guardar los datos 
     public void guardarLugares(ArrayList<Lugar> arr_lugares){
         try{
             fw = new FileWriter("lugares.txt"); 
@@ -95,10 +92,7 @@ public class GestorArchivos {
         }
     }
 
-    // ===========================
-    // Métodos para cargar datos
-    // ===========================
-
+    // Metodos para cargar los datos
     public ArrayList<Lugar> cargarLugares(){
         ArrayList<Lugar> arr_lugares = new ArrayList<>();
 
