@@ -58,4 +58,53 @@ public class PlanificadorRutas {
             }
         }
     }
+
+
+
+
+
+    // Metodo para recomendar destinos (Afinidad)
+    public static void afinidad(ArrayList<Lugar> arr_lugares, Turista turista){
+        String[] preferenciasTurista = turista.getPreferenciasTurista();
+        int coincidencias = 0;
+
+        for(int i=0; i<arr_lugares.size(); i++){
+            Lugar lugar = arr_lugares.get(i);
+            String[] interesesLugar = lugar.getInteresesLugar();
+
+            for(int j=0; j<preferenciasTurista.length; j++){
+                for(int k=0; k<interesesLugar.length; k++){
+                    if(preferenciasTurista[j].equalsIgnoreCase(interesesLugar[k])){
+                        coincidencias++;
+                    }
+                }
+            }
+        }
+
+        if(coincidencias > 0){
+
+
+
+            // Imprimir lugares
+        }
+        else{
+            
+        }
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 }

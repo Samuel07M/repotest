@@ -84,6 +84,11 @@ public class Menu {
                 app.mostrarLugaresAbiertos();
             }
 
+            // Opcion 8: recomendar destinos
+            if(opcion == 8){
+                app.recomendarDestinos();
+            }
+
             // Opcion 10: mostrar menu rutas
             if(opcion == 10){
                 mostrarMenuRutas();

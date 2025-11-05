@@ -11,6 +11,15 @@ public class Lugar extends EntidadTuristica {      // Herencia entre clases
         this.estado = estado;
     }
 
+    // Implementacion para el metodo polimorfico de la superclase
+    @Override
+    public void mostrarLugares(){
+        String intereses = String.join(", ", getInteresesLugar());
+        System.out.println(". " + getNombreLugar() + " || " + 
+                            getDescripcionLugar() + " || " + "Intereses: " +
+                            intereses + " || " + "Estado: " + getEstado());
+    }
+
     // Getters y Setters 
     public String[] getInteresesLugar(){
         return interesesLugar;

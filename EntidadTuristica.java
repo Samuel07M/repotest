@@ -10,8 +10,8 @@ public abstract class EntidadTuristica {    // Clase abstracta, no se puede inst
         this.descripcionLugar = descripcionLugar; 
     }
 
-    // Metodo que se podra sobreescribir 
-    // public abstract void (){}
+    // Metodo abstracto para mostrar los lugares (polimorfismo) 
+    public abstract void mostrarLugares();
 
     // Getters y setters 
     public String getNombreLugar(){

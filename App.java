@@ -245,12 +245,8 @@ public class App {
         }
 
         for(int i=0; i<arr_lugares.size(); i++){
-            Lugar lugar = arr_lugares.get(i);
-            String intereses = String.join(", ", lugar.getInteresesLugar());
-            
-            System.out.println((i+1) + ". " + lugar.getNombreLugar() + " || " + 
-                               lugar.getDescripcionLugar() + " || " + "Intereses: " +
-                               intereses + " || " + "Estado: " + lugar.getEstado());
+            EntidadTuristica entidadTuristica = arr_lugares.get(i); // tipo general
+            System.out.println((i+1) + "." + entidadTuristica.mostrarLugares()); // polimorfismo en acción
         }
     }
 
@@ -300,6 +296,45 @@ public class App {
             System.out.println("\nNo hay lugares abiertos.\n");
         }
     }
+
+
+
+    // Metodo para recomendar destinos - Opcion 8 del menu
+    public void recomendarDestinos(){
+        System.out.println("\n== Recomendaciones ==");
+
+        if(arr_lugares.isEmpty()){
+            System.out.println("\nNo hay lugares registrados.\n");
+            return;
+        }
+
+        if(arr_turistas.isEmpty()){
+            System.out.println("\nNo hay turistas registrados.\n");
+            return;
+        }
+
+        System.out.print("Nombre del Turista: ");
+            String nombreTurista = teclado.nextLine();
+            Turista verificarTurista = null; 
+            for(int i=0; i<arr_turistas.size(); i++){
+                if(arr_turistas.get(i).getNombreTurista().trim().equalsIgnoreCase(nombreTurista)){
+                    verificarTurista = arr_turistas.get(i); 
+                }
+            }
+        
+        if(verificarTurista != null){
+            PlanificadorRutas.afinidad(arr_lugares, verificarTurista);
+        }
+        else{
+            System.out.println("\nEl Turista no esta registrado.\n");
+        }
+    }
+
+
+
+
+
+
 
     // Metodos para mostrar las rutas - Opcion 10 del menu
     public void mostrarRutas(){
