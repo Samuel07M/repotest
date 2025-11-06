@@ -11,7 +11,7 @@ public abstract class EntidadTuristica {    // Clase abstracta, no se puede inst
     }
 
     // Metodo abstracto para mostrar los lugares (polimorfismo) 
-    public abstract void mostrarLugares();
+    public abstract void imprimirLugares();
 
     // Getters y setters 
     public String getNombreLugar(){

@@ -3,13 +3,13 @@ public class Conexion {
     // Atributos 
     private String origen; 
     private String destino; 
-    private float tiempo; 
+    private float tiempoBase; 
     
     // Constructor 
     public Conexion(String origen, String destino, float tiempo){
         this.origen = origen; 
         this.destino = destino; 
-        this.tiempo = tiempo; 
+        this.tiempoBase = tiempo; 
     }
 
     // Getters y Setters 
@@ -21,7 +21,7 @@ public class Conexion {
         return destino;
     }
 
-    public float getTiempo(){
-        return tiempo;
+    public float getTiempoBase(){
+        return tiempoBase;
     }
 }

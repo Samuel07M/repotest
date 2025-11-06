@@ -89,6 +89,10 @@ public class Menu {
                 app.recomendarDestinos();
             }
 
+            // Opcion 9: lugares conectados
+            if(opcion == 9){
+                app.lugaresConectados();
+            }
             // Opcion 10: mostrar menu rutas
             if(opcion == 10){
                 mostrarMenuRutas();

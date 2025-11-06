@@ -21,14 +21,6 @@ public class App {
     ArrayList<Conexion> arr_conexiones = new ArrayList<>();
     ArrayList<PlanificadorRutas> arr_planificadorRutas = new ArrayList<>();
 
-    // Metodo para cargar datos 
-    public void cargarDatos(){
-        GestorArchivos gestorArchivos = new GestorArchivos();
-        arr_lugares = gestorArchivos.cargarLugares();
-        arr_conexiones = gestorArchivos.cargarConexiones();
-        arr_planificadorRutas = gestorArchivos.cargarRutas();
-    }
-
     // Metodo para registrar nuevas ciudades - Opcion 1 del menu
     public void registrarLugar(){
         System.out.println("\n== Registrar Lugar ==");
@@ -212,22 +204,25 @@ public class App {
         }
 
         boolean verificarConexion = false;
-        float tiempo = 0;
+        float tiempoBase = 0;
         for(int i=0; i<arr_conexiones.size(); i++){
             Conexion conexion = arr_conexiones.get(i);
             if(conexion.getOrigen().trim().equalsIgnoreCase(origen) && conexion.getDestino().trim().equalsIgnoreCase(destino)){
                 verificarConexion = true;
-                tiempo = conexion.getTiempo();
+                tiempoBase = conexion.getTiempoBase();
             }
             if(conexion.getOrigen().trim().equalsIgnoreCase(destino) && conexion.getDestino().trim().equalsIgnoreCase(origen)){
                 verificarConexion = true;
-                tiempo = conexion.getTiempo();
+                tiempoBase = conexion.getTiempoBase();
             }
         }
 
         if(verificarConexion == true){
-            System.out.println("Tiempo base (horas): " + tiempo);
-            arr_planificadorRutas.add(new PlanificadorRutas(origen, destino, ruta, tiempo));
+            System.out.println("Tiempo base (horas): " + tiempoBase);
+            System.out.print("Tiempo adicional de la ruta (horas): ");
+                float tiempoRuta = teclado.nextFloat();
+                teclado.nextLine();
+            arr_planificadorRutas.add(new PlanificadorRutas(origen, destino, ruta, tiempoRuta));
             System.out.println("\nRuta registrada exitosamente.\n");
         }
         else{
@@ -246,7 +241,8 @@ public class App {
 
         for(int i=0; i<arr_lugares.size(); i++){
             EntidadTuristica entidadTuristica = arr_lugares.get(i); // tipo general
-            System.out.println((i+1) + "." + entidadTuristica.mostrarLugares()); // polimorfismo en acción
+            System.out.print((i+1));
+            entidadTuristica.imprimirLugares(); // polimorfismo en acción
         }
     }
 
@@ -263,7 +259,7 @@ public class App {
             Conexion conexion = arr_conexiones.get(i);
 
             System.out.println(conexion.getOrigen() + " <-> " + conexion.getDestino() + 
-                               " || Tiempo: " + conexion.getTiempo());
+                               " || Tiempo Base: " + conexion.getTiempoBase());
         }
     }
 
@@ -276,25 +272,7 @@ public class App {
             return;
         }
 
-        boolean lugaresAbiertos = false;
-        for(int i=0; i<arr_lugares.size(); i++){
-            Lugar lugar = arr_lugares.get(i);
-
-            if(lugar.getEstado().equalsIgnoreCase("abierta")){
-                lugaresAbiertos = true;
-
-                lugar = arr_lugares.get(i);
-                String intereses = String.join(", ", lugar.getInteresesLugar());
-            
-                System.out.println((i+1) + ". " + lugar.getNombreLugar() + " || " + 
-                                    lugar.getDescripcionLugar() + " || " + "Intereses: " +
-                                    intereses);
-            }
-        }
-
-        if(lugaresAbiertos == false){
-            System.out.println("\nNo hay lugares abiertos.\n");
-        }
+        Lugar.imprimirLugaresAbiertos(arr_lugares);
     }
 
 
@@ -331,10 +309,57 @@ public class App {
     }
 
 
+    // Metodo para ver si dos lugares estan conectados - Opcion 9 del menu
+    public void lugaresConectados(){
+        System.out.println("\n== Lugares Conectados ==");
 
+        if(arr_conexiones.isEmpty()){
+            System.out.println("\nNo hay lugares registrados.\n");
+            return;
+        }
 
+        System.out.print("Lugar A: ");
+            String lugarA = teclado.nextLine();
+        Lugar verificarLugarA = null; // Objeto temporal 
+        for(int i=0; i<arr_lugares.size(); i++){
+            if (arr_lugares.get(i).getNombreLugar().trim().equalsIgnoreCase(lugarA)){
+                verificarLugarA = arr_lugares.get(i); 
+            }
+        }
 
+        if(verificarLugarA == null){
+            System.out.println("\nEl lugar no esta registrado.\n");
+            return;
+        }
 
+        System.out.print("Lugar B: ");
+            String lugarB = teclado.nextLine();
+        Lugar verificarLugarB = null; // Objeto temporal 
+        for(int i=0; i<arr_lugares.size(); i++){
+            if (arr_lugares.get(i).getNombreLugar().trim().equalsIgnoreCase(lugarB)){
+                verificarLugarB = arr_lugares.get(i); 
+            }
+        }
+
+        if(verificarLugarB == null){
+            System.out.println("\nEl lugar no esta registrado.\n");
+            return;
+        }
+
+        boolean estanConectadas = false;
+        for(int i=0; i<arr_conexiones.size(); i++){
+            Conexion conexion = arr_conexiones.get(i);
+
+            if(conexion.getOrigen().equalsIgnoreCase(lugarA) && conexion.getDestino().equalsIgnoreCase(lugarB)){
+                System.out.println("\n" + lugarA + " y " + lugarB + " estan conectadas.\n");
+                estanConectadas = true;
+            }
+        }
+
+        if(estanConectadas == false){
+            System.out.println("\nLos lugares no estan conectados.\n");
+        }
+    }
 
     // Metodos para mostrar las rutas - Opcion 10 del menu
     public void mostrarRutas(){
@@ -371,5 +396,13 @@ public class App {
         else{
             PlanificadorRutas.filtrarRutas(arr_planificadorRutas, origen);
         }
+    }
+
+    // Metodo para cargar datos - Opcion 11 del menu
+    public void cargarDatos(){
+        GestorArchivos gestorArchivos = new GestorArchivos();
+        arr_lugares = gestorArchivos.cargarLugares();
+        arr_conexiones = gestorArchivos.cargarConexiones();
+        arr_planificadorRutas = gestorArchivos.cargarRutas();
     }
 }

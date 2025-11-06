@@ -54,7 +54,7 @@ public class GestorArchivos {
 
             for(int i = 0; i < arr_conexiones.size(); i++){
                 Conexion conexion = arr_conexiones.get(i);
-                pw.println(conexion.getOrigen() + "|" + conexion.getDestino() + "|" + conexion.getTiempo());
+                pw.println(conexion.getOrigen() + "|" + conexion.getDestino() + "|" + conexion.getTiempoBase());
                 pw.flush();
             }
 
