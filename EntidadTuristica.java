@@ -6,19 +6,27 @@ public abstract class EntidadTuristica {    // Clase abstracta, no se puede inst
 
     // Constructor
     public EntidadTuristica(String nombreLugar, String descripcionLugar){
-        this.nombreLugar = nombreLugar; 
-        this.descripcionLugar = descripcionLugar; 
+        setNombreLugar(nombreLugar); 
+        setDescripcionLugar(descripcionLugar);
     }
 
     // Metodo abstracto para mostrar los lugares (polimorfismo) 
     public abstract void imprimirLugares();
 
-    // Getters y setters 
+    // Getters y Setters
     public String getNombreLugar(){
         return nombreLugar;
     }
 
     public String getDescripcionLugar(){
         return descripcionLugar;
+    }
+
+    public void setNombreLugar(String nombreLugar){
+        this.nombreLugar = nombreLugar;
+    }
+
+    public void setDescripcionLugar(String descripcionLugar){
+        this.descripcionLugar = descripcionLugar;
     }
 }

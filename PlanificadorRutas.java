@@ -16,44 +16,71 @@ public class PlanificadorRutas {
         this.tiempoRuta = tiempoRuta;
     }
 
-    // Getters y Setters
-    public String[] getRuta(){
-        return ruta;
-    }
-
-    public String getOrigen(){
-        return origen;
-    }
-
-    public String getDestino(){
-        return destino;
-    }
-
-    public float getTiempo(){
-        return tiempoRuta;
-    }
-
     // Metodos para mostrar y filtrar las rutas 
-    public static void mostrarRutas(ArrayList<PlanificadorRutas> arr_planificadorRutas){
+    public static void imprimirRutas(ArrayList<PlanificadorRutas> arr_planificadorRutas, ArrayList<Conexion> arr_conexiones){
         for(int i=0; i<arr_planificadorRutas.size(); i++){
             PlanificadorRutas ruta = arr_planificadorRutas.get(i);
+
+            Conexion conexion = null;
+            for(int j=0; j<arr_conexiones.size(); j++){
+                if(arr_conexiones.get(j).getDestino().equalsIgnoreCase(ruta.getDestino())){
+                    conexion = arr_conexiones.get(j);
+                    break;
+                }
+            }
+
             String lugares = String.join(" -> ", ruta.getRuta());
-            System.out.println((i + 1) + ". Origen: " + ruta.getOrigen() +
-                                " || Destino: " + ruta.getDestino() +
-                                " || Ruta: " + lugares +
-                                " || Tiempo: " + ruta.getTiempo() + " horas");
+            System.out.println((i+1) + ". Origen: " + ruta.getOrigen() + " || Destino: " + ruta.getDestino());
+            System.out.println("   [ " + lugares + " ]");
+            System.out.println("   Tiempo Base (hrs): " + conexion.getTiempoBase() + " || "
+                               + "Tiempo Adicional de la Ruta: " + ruta.getTiempoRuta()
+                               + " || Tiempo total: " + (conexion.getTiempoBase() + ruta.getTiempoRuta()));
         }
     }    
 
-    public static void filtrarRutas(ArrayList<PlanificadorRutas> arr_planificadorRutas, String origen){
+    public static void filtrarRutasOrigen(ArrayList<PlanificadorRutas> arr_planificadorRutas, ArrayList<Conexion> arr_conexiones, String origen){
         for(int i=0; i<arr_planificadorRutas.size(); i++){
             if(origen.equalsIgnoreCase(arr_planificadorRutas.get(i).getOrigen())){
                 PlanificadorRutas ruta = arr_planificadorRutas.get(i);
+                
+                Conexion conexion = null;
+                for(int j=0; j<arr_conexiones.size(); j++){
+                    if(arr_conexiones.get(j).getOrigen().equalsIgnoreCase(ruta.getOrigen())){
+                        conexion = arr_conexiones.get(j);
+                        break;
+                    }
+                }
+                
                 String lugares = String.join(" -> ", ruta.getRuta());
-                System.out.println((i + 1) + ". Origen: " + ruta.getOrigen() +
-                                    " || Destino: " + ruta.getDestino() +
-                                    " || Ruta: " + lugares +
-                                    " || Tiempo: " + ruta.getTiempo() + " horas");
+                System.out.println((i+1) + ". Origen: " + ruta.getOrigen() + " || Destino: " + ruta.getDestino());
+                System.out.println("   [ " + lugares + " ]");
+                System.out.println("   Tiempo Base (hrs): " + conexion.getTiempoBase() + " || "
+                               + "Tiempo Adicional de la Ruta: " + ruta.getTiempoRuta()
+                               + " || Tiempo total: " + (conexion.getTiempoBase() + ruta.getTiempoRuta()));
+
+            }
+        }
+    }
+
+    public static void filtrarRutasDestino(ArrayList<PlanificadorRutas> arr_planificadorRutas, ArrayList<Conexion> arr_conexiones, String destino){
+        for(int i=0; i<arr_planificadorRutas.size(); i++){
+            if(destino.equalsIgnoreCase(arr_planificadorRutas.get(i).getDestino())){ 
+                PlanificadorRutas ruta = arr_planificadorRutas.get(i);
+
+                Conexion conexion = null;
+                for(int j=0; j<arr_conexiones.size(); j++){
+                    if(arr_conexiones.get(j).getDestino().equalsIgnoreCase(ruta.getDestino())){
+                        conexion = arr_conexiones.get(j);
+                        break;
+                    }
+                }
+
+                String lugares = String.join(" -> ", ruta.getRuta());
+                System.out.println((i+1) + ". Origen: " + ruta.getOrigen() + " || Destino: " + ruta.getDestino());
+                System.out.println("   [ " + lugares + " ]");
+                System.out.println("   Tiempo Base (hrs): " + conexion.getTiempoBase() + " || "
+                               + "Tiempo Adicional de la Ruta: " + ruta.getTiempoRuta()
+                               + " || Tiempo total: " + (conexion.getTiempoBase() + ruta.getTiempoRuta()));
 
             }
         }
@@ -147,5 +174,22 @@ public class PlanificadorRutas {
         if(hayCoincidencias == false){
             System.out.println("\nNo hay lugares con intereses compartidos.\n");
         }
-    }    
+    }
+
+    // Getters
+    public String[] getRuta(){
+        return ruta;
+    }
+
+    public String getOrigen(){
+        return origen;
+    }
+
+    public String getDestino(){
+        return destino;
+    }
+
+    public float getTiempoRuta(){
+        return tiempoRuta;
+    }
 }

@@ -40,12 +40,12 @@ public class Menu {
                 teclado.nextLine();
 
                 if(opcion < 0 || opcion > 11){
-                    System.out.println("\nOpcion invalida.");
+                    System.out.println("\nOpcion invalida.\n");
                     continue;
                 }
             }
             else{
-                System.out.println("\nOpcion Invalida.");
+                System.out.println("\nOpcion Invalida.\n");
                 teclado.next(); // Limpira el buffer y evita un bucle infinito
                 continue;
             }
@@ -113,7 +113,8 @@ public class Menu {
             System.out.println("Opciones:");
             System.out.println(" 0 - Volver al menu principal");
             System.out.println(" 1 - Mostrar todas las rutas");
-            System.out.println(" 2 - Filtrar por lugares");
+            System.out.println(" 2 - Filtrar por origen");
+            System.out.println(" 3 - Filtrar por destino");
             System.out.print("Elige una opcion: "); 
             
             // Verifica que el usuario escriba un numero entero
@@ -121,13 +122,13 @@ public class Menu {
                 opcion = teclado.nextInt();
                 teclado.nextLine();
 
-                if(opcion < 0 || opcion > 11){
-                    System.out.println("\nOpcion invalida.");
+                if(opcion < 0 || opcion > 3){
+                    System.out.println("\nOpcion invalida.\n");
                     continue;
                 }
             }
             else{
-                System.out.println("\nOpcion Invalida.");
+                System.out.println("\nOpcion Invalida.\n");
                 teclado.next(); // Limpira el buffer y evita un bucle infinito
                 continue;
             }
@@ -139,7 +140,11 @@ public class Menu {
 
             //opcion 2: filtrar por lugares
             if(opcion == 2){
-                app.filtrarRutas();
+                app.mostrarRutasOrigen();
+            }
+
+            if(opcion == 3){
+                app.mostrarRutasDestino();
             }
         }
     }

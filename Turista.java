@@ -6,16 +6,20 @@ public class Turista {
 
     // Constructor 
     public Turista(String nombreTurista, String[] preferenciasTurista){
-        this.nombreTurista = nombreTurista; 
+        setNombreTurista(nombreTurista); 
         this.preferenciasTurista = preferenciasTurista;
     }
 
-    // Getters y Setters 
+    // Getters y Setters
     public String getNombreTurista(){
         return nombreTurista;
     }
 
     public String[] getPreferenciasTurista(){
         return preferenciasTurista;
+    }
+
+    public void setNombreTurista(String nombreTurista){
+        this.nombreTurista = nombreTurista;
     }
 }

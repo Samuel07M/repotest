@@ -36,7 +36,7 @@ public class GestorArchivos {
                 pw.flush();
             }
 
-            System.out.println("\nLugares guardados exitosamente.\n");
+            System.out.println("\nLugares guardados exitosamente.");
             fw.close();
             br.close();
             pw.close();
@@ -58,7 +58,7 @@ public class GestorArchivos {
                 pw.flush();
             }
 
-            System.out.println("\nConexiones guardadas exitosamente.\n");
+            System.out.println("Conexiones guardadas exitosamente.");
             fw.close();
             br.close();
             pw.close();
@@ -78,11 +78,11 @@ public class GestorArchivos {
                 PlanificadorRutas planificadorRutas = arr_planificadorRutas.get(i);
                 String[] ruta_tmp = planificadorRutas.getRuta();
                 String ruta = String.join(",", ruta_tmp);
-                pw.println(planificadorRutas.getOrigen() + "|" + planificadorRutas.getDestino() + "|" + ruta + "|" + planificadorRutas.getTiempo());
+                pw.println(planificadorRutas.getOrigen() + "|" + planificadorRutas.getDestino() + "|" + ruta + "|" + planificadorRutas.getTiempoRuta());
                 pw.flush();
             }
 
-            System.out.println("\nRutas guardadas exitosamente.\n");
+            System.out.println("Rutas guardadas exitosamente.");
             fw.close();
             br.close();
             pw.close();
@@ -117,7 +117,7 @@ public class GestorArchivos {
                 }
             }
 
-            System.out.println("\nLugares cargados exitosamente.\n");
+            System.out.println("\nLugares cargados exitosamente.");
             
             fr.close();
             archivo.close();
@@ -147,7 +147,7 @@ public class GestorArchivos {
                 }
             }
 
-            System.out.println("\nConexiones cargadas exitosamente.\n");
+            System.out.println("Conexiones cargadas exitosamente.");
 
             fr.close();
             archivo.close();
@@ -181,7 +181,7 @@ public class GestorArchivos {
                 }
             }
 
-            System.out.println("\nRutas cargadas exitosamente.\n");
+            System.out.println("Rutas cargadas exitosamente.\n");
 
             fr.close();
             archivo.close();

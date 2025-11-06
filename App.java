@@ -12,6 +12,7 @@ public class App {
         gestorArchivos.guardarLugares(app.arr_lugares);
         gestorArchivos.guardarConexiones(app.arr_conexiones);
         gestorArchivos.guardarRutas(app.arr_planificadorRutas);
+        System.out.println("\nSaliendo...\n");
     }
 
     // Declaracion de entrada de datos 
@@ -116,7 +117,7 @@ public class App {
             return;
         }
 
-        System.out.print("Tiempo de viaje base (horas): ");
+        System.out.print("Tiempo de viaje base (hrs): ");
             float tiempo = teclado.nextFloat();
             teclado.nextLine();
         arr_conexiones.add(new Conexion(origen, destino, tiempo));
@@ -218,8 +219,8 @@ public class App {
         }
 
         if(verificarConexion == true){
-            System.out.println("Tiempo base (horas): " + tiempoBase);
-            System.out.print("Tiempo adicional de la ruta (horas): ");
+            System.out.println("Tiempo base (hrs): " + tiempoBase);
+            System.out.print("Tiempo adicional de la ruta (hrs): ");
                 float tiempoRuta = teclado.nextFloat();
                 teclado.nextLine();
             arr_planificadorRutas.add(new PlanificadorRutas(origen, destino, ruta, tiempoRuta));
@@ -259,8 +260,10 @@ public class App {
             Conexion conexion = arr_conexiones.get(i);
 
             System.out.println(conexion.getOrigen() + " <-> " + conexion.getDestino() + 
-                               " || Tiempo Base: " + conexion.getTiempoBase());
+                               " || Tiempo Base (hrs): " + conexion.getTiempoBase());
         }
+
+        System.out.println("");
     }
 
     // Metodo para mostrar solo los lugares abiertos - Opcion 7 del menu
@@ -273,6 +276,7 @@ public class App {
         }
 
         Lugar.imprimirLugaresAbiertos(arr_lugares);
+        System.out.println("");
     }
 
 
@@ -301,6 +305,7 @@ public class App {
             }
         
         if(verificarTurista != null){
+            System.out.println("");
             PlanificadorRutas.afinidad(arr_lugares, verificarTurista);
         }
         else{
@@ -370,11 +375,12 @@ public class App {
             return;
         }
 
-        PlanificadorRutas.mostrarRutas(arr_planificadorRutas);
+        PlanificadorRutas.imprimirRutas(arr_planificadorRutas, arr_conexiones);
+        System.out.println("");
     }
 
-    public void filtrarRutas(){
-        System.out.println("\n== Filtrar Rutas ==");
+    public void mostrarRutasOrigen(){
+        System.out.println("\n== Filtrar Rutas por Origen ==");
 
         if(arr_planificadorRutas.isEmpty()){
             System.out.println("\nNo hay rutas registradas.\n");
@@ -385,7 +391,7 @@ public class App {
             String origen = teclado.nextLine();
         Lugar verificarLugar = null; // Objeto temporal 
         for(int i=0; i<arr_lugares.size(); i++){
-            if (arr_lugares.get(i).getNombreLugar().trim().equalsIgnoreCase(origen)){
+            if(arr_lugares.get(i).getNombreLugar().trim().equalsIgnoreCase(origen)){
                 verificarLugar = arr_lugares.get(i); 
             }
         }
@@ -394,8 +400,34 @@ public class App {
             System.out.println("\nEl lugar no esta registrado.\n");
         }
         else{
-            PlanificadorRutas.filtrarRutas(arr_planificadorRutas, origen);
+            PlanificadorRutas.filtrarRutasOrigen(arr_planificadorRutas, arr_conexiones, origen);
         }
+    }
+
+    public void mostrarRutasDestino(){
+        System.out.println("\n== Filtrar Rutas por Destino ==");
+
+        if(arr_planificadorRutas.isEmpty()){
+            System.out.println("\nNo hay rutas registradas.\n");
+            return;
+        }
+
+        System.out.print("Destino: ");
+            String destino = teclado.nextLine();
+        Lugar verificarLugar = null; // Objeto temporal 
+        for(int i=0; i<arr_lugares.size(); i++){
+            if(arr_lugares.get(i).getNombreLugar().trim().equalsIgnoreCase(destino)){
+                verificarLugar = arr_lugares.get(i); 
+            }
+        }
+
+        if(verificarLugar == null){
+            System.out.println("\nEl lugar no esta registrado.\n");
+        }
+        else{
+            PlanificadorRutas.filtrarRutasDestino(arr_planificadorRutas, arr_conexiones, destino);
+        }
+
     }
 
     // Metodo para cargar datos - Opcion 11 del menu

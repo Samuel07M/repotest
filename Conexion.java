@@ -12,7 +12,7 @@ public class Conexion {
         this.tiempoBase = tiempo; 
     }
 
-    // Getters y Setters 
+    // Getters 
     public String getOrigen(){
         return origen;
     }
