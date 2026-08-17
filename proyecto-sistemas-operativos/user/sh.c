@@ -30,6 +30,7 @@ ensure_std_fds(void)
 int
 main(void)
 {
+  printf("\n>>> SOY LA NUEVA SHELL <<<\n\n");
   static char line[MAXLINE];
 
   ensure_std_fds();
