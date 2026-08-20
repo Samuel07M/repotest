@@ -1,30 +1,7 @@
-// parser.c
-// Implementacion del analizador de la linea de comandos.
-//
-// Gramatica soportada (sin comillas, sin variables, sin comodines):
-//
-//   linea    -> pipeline
-//   pipeline -> etapa ( '|' etapa )*
-//   etapa    -> palabra+ ( '<' palabra | '>' palabra )*
-//
-// El analisis se hace en dos partes:
-//   1. Un tokenizador (gettoken) que reconoce palabras y los simbolos
-//      especiales '|', '<', '>'.
-//   2. Un ensamblador de tuberia que recorre los tokens y construye la
-//      estructura struct pipeline definida en parser.h.
-//
-// Manejo de memoria: cada palabra reconocida (argumento, nombre de
-// archivo de redireccion) se reserva con malloc (dupword). Si el
-// analisis se aborta por cualquier motivo (token invalido, error de
-// sintaxis, falta de memoria), TODO lo reservado hasta ese punto -
-// incluida la etapa que se estaba construyendo en ese momento, aunque
-// este incompleta - se libera antes de retornar, para no dejar fugas.
-
 #include "kernel/types.h"
 #include "user/user.h"
 #include "parser.h"
-#include "commands.h" // free_pipeline
-
+#include "commands.h"
 #define TOK_WORD 1
 #define TOK_PIPE 2
 #define TOK_LT   3
@@ -32,21 +9,13 @@
 #define TOK_END  5
 #define TOK_ERR  6
 
-// Avanza 'p' saltando espacios en blanco.
-static char*
-skip_blanks(char *p, char *end)
-{
+static char* skip_blanks(char *p, char *end) {
   while (p < end && (*p == ' ' || *p == '\t'))
     p++;
   return p;
 }
 
-// Obtiene el siguiente token a partir de *pp (sin sobrepasar 'end').
-// Si el token es una palabra, la copia (terminada en '\0') en buf.
-// Actualiza *pp para que apunte despues del token consumido.
-static int
-gettoken(char **pp, char *end, char *buf, int bufsize)
-{
+static int gettoken(char **pp, char *end, char *buf, int bufsize) {
   char *p = skip_blanks(*pp, end);
 
   if (p >= end) {
@@ -67,10 +36,8 @@ gettoken(char **pp, char *end, char *buf, int bufsize)
     return TOK_GT;
   }
 
-  // Palabra: todo lo que no sea espacio ni simbolo especial.
   char *start = p;
-  while (p < end && *p != ' ' && *p != '\t' &&
-         *p != '|' && *p != '<' && *p != '>')
+  while (p < end && *p != ' ' && *p != '\t' && *p != '|' && *p != '<' && *p != '>') 
     p++;
 
   int len = p - start;
@@ -86,10 +53,7 @@ gettoken(char **pp, char *end, char *buf, int bufsize)
   return TOK_WORD;
 }
 
-// Reserva espacio para una copia de 'word' dentro del heap del proceso.
-static char*
-dupword(char *word)
-{
+static char* dupword(char *word) {
   int len = strlen(word);
   char *copy = malloc(len + 1);
   if (copy == 0) {
@@ -100,13 +64,7 @@ dupword(char *word)
   return copy;
 }
 
-// Aborta el analisis: libera toda la memoria reservada hasta el momento
-// y retorna -1. 'pending' indica si la etapa actualmente en construccion
-// (pl->stages[pl->nstages], todavia no contabilizada en pl->nstages) debe
-// incluirse en la liberacion.
-static int
-parse_fail(struct pipeline *pl, int pending)
-{
+static int parse_fail(struct pipeline *pl, int pending) {
   if (pending)
     pl->nstages++;
   free_pipeline(pl);
@@ -114,9 +72,7 @@ parse_fail(struct pipeline *pl, int pending)
   return -1;
 }
 
-int
-parse_line(char *line, struct pipeline *pl)
-{
+int parse_line(char *line, struct pipeline *pl) {
   char *p = line;
   char *end = line + strlen(line);
   char tokbuf[MAXLINE];
@@ -127,7 +83,7 @@ parse_line(char *line, struct pipeline *pl)
   st->infile = 0;
   st->outfile = 0;
 
-  int have_command = 0; // hay al menos una palabra en la etapa actual
+  int have_command = 0;
 
   for (;;) {
     int tok = gettoken(&p, end, tokbuf, sizeof(tokbuf));
@@ -167,9 +123,6 @@ parse_line(char *line, struct pipeline *pl)
       char *w = dupword(tokbuf);
       if (w == 0)
         return parse_fail(pl, 1);
-      // Si el mismo tipo de redireccion se repite en la misma etapa
-      // (p. ej. "echo hola > a.txt > b.txt"), la ultima gana; se libera
-      // la cadena anterior para no dejarla huerfana en el heap.
       if (tok == TOK_LT) {
         if (st->infile)
           free(st->infile);
@@ -191,8 +144,6 @@ parse_line(char *line, struct pipeline *pl)
       pl->nstages++;
       if (pl->nstages >= MAXSTAGES) {
         printf("sh: demasiados comandos encadenados con '|'\n");
-        // La etapa que se acaba de cerrar ya quedo contabilizada en
-        // pl->nstages; no hay una etapa adicional pendiente que sumar.
         return parse_fail(pl, 0);
       }
       st = &pl->stages[pl->nstages];
@@ -206,7 +157,7 @@ parse_line(char *line, struct pipeline *pl)
 
   if (!have_command) {
     if (pl->nstages == 0)
-      return 0; // linea vacia: nada que ejecutar
+      return 0;
     printf("sh: se esperaba un comando despues de '|'\n");
     return parse_fail(pl, 1);
   }

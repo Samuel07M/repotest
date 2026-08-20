@@ -1,29 +1,9 @@
-// commands.c
-// Ejecucion de una tuberia (pipeline) de una o mas etapas.
-//
-// Cada etapa se ejecuta en un proceso hijo independiente (fork + exec).
-// Cuando hay mas de una etapa, se encadenan mediante pipes: el extremo
-// de lectura del pipe anterior se conecta a la entrada estandar de la
-// siguiente etapa, y el extremo de escritura del pipe actual se conecta
-// a la salida estandar de la etapa presente. Las redirecciones ('<' y
-// '>') explicitas de cada etapa se aplican despues de conectar los
-// pipes, de modo que tienen prioridad sobre estos.
-
 #include "kernel/types.h"
 #include "user/user.h"
 #include "kernel/fcntl.h"
 #include "commands.h"
 
-// Aplica las redirecciones de archivo indicadas en la etapa, si existen.
-// Debe llamarse en el proceso hijo, antes de exec().
-static void
-apply_redirections(struct stage *st)
-{
-  // Importante: primero se abre el archivo y se verifica exito, y solo
-  // despues se cierra/reemplaza el descriptor original (0 o 1). Si se
-  // hiciera al reves (cerrar antes de abrir), un open() fallido dejaria
-  // el descriptor de salida cerrado justo antes de intentar imprimir el
-  // mensaje de error, y ese mensaje se perderia en silencio.
+static void apply_redirections(struct stage *st) {
   if (st->infile) {
     int fd = open(st->infile, O_RDONLY);
     if (fd < 0) {
@@ -47,19 +27,10 @@ apply_redirections(struct stage *st)
   }
 }
 
-void
-run_pipeline(struct pipeline *pl)
-{
+void run_pipeline(struct pipeline *pl) {
   int n = pl->nstages;
-  int prevfd = -1; // extremo de lectura del pipe de la etapa anterior
-  int created = 0; // procesos hijos efectivamente creados hasta el momento
-
-  // NOTA: run_pipeline se ejecuta directamente en el proceso del shell
-  // (no en un hijo intermedio), por lo que ante un error de pipe() o
-  // fork() NUNCA debe llamar a exit(): eso terminaria el shell entero.
-  // En su lugar, se reportan el error, se cierran los descriptores
-  // pendientes, se espera a los hijos ya creados y se retorna
-  // normalmente para que sh.c continue con la siguiente linea.
+  int prevfd = -1;
+  int created = 0;
 
   for (int i = 0; i < n; i++) {
     struct stage *st = &pl->stages[i];
@@ -86,7 +57,6 @@ run_pipeline(struct pipeline *pl)
     }
 
     if (pid == 0) {
-      // Proceso hijo: conecta la etapa dentro de la tuberia.
       if (prevfd != -1) {
         close(0);
         dup(prevfd);
@@ -99,7 +69,6 @@ run_pipeline(struct pipeline *pl)
         close(fd[1]);
       }
 
-      // Las redirecciones explicitas tienen prioridad sobre el pipe.
       apply_redirections(st);
 
       if (st->argc == 0)
@@ -110,8 +79,6 @@ run_pipeline(struct pipeline *pl)
       exit(1);
     }
 
-    // Proceso padre (el shell): cierra los descriptores que ya no
-    // necesita y avanza al siguiente eslabon de la tuberia.
     created++;
     if (prevfd != -1)
       close(prevfd);
@@ -128,9 +95,7 @@ run_pipeline(struct pipeline *pl)
     wait(0);
 }
 
-void
-free_pipeline(struct pipeline *pl)
-{
+void free_pipeline(struct pipeline *pl) {
   for (int i = 0; i < pl->nstages; i++) {
     struct stage *st = &pl->stages[i];
     for (int j = 0; j < st->argc; j++)
