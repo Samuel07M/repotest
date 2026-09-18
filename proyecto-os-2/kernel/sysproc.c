@@ -144,7 +144,7 @@ sys_sysinfo(void)
   info.freemem       = info.freepages * PGSIZE;
   info.runnableprocs = runnable_count();
 
-  if (copyout(p->pagetable, p->sz, addr, (char *)&info, sizeof(info)) < 0)
+  if (copyout(p->pagetable, addr, (char *)&info, sizeof(info)) < 0)
     return -1;
 
   return 0;

@@ -1,5 +1,5 @@
-#inlcude "kernel/types.h"
-#inlcude "user/user.h"
+#include "kernel/types.h"
+#include "user/user.h"
 
 int main(int argc, char *argv[]) {
   // Valida argumentos con mensaje por stderr y salida distinta de cero 

@@ -29,7 +29,6 @@ int sync(void);
 int trace(const char*); // Nuevo
 int sysinfo(struct sysinfo*); // Nuevo
 
-
 // ulib.c
 int stat(const char *, struct stat *);
 char *strcpy(char *, const char *);

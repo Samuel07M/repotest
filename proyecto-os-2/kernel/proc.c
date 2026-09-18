@@ -694,7 +694,9 @@ procdump(void)
 // NUEVO: cuenta cuantos procesos se encuentran actualmente en estado
 // RUNNABLE. Utilizada por sys_sysinfo (kernel/sysproc.c) para reportar
 // el estado del sistema al espacio de usuario.
-int runnable_count (void) {
+int
+runnable_count(void)
+{
   struct proc *p;
   int n = 0;
 

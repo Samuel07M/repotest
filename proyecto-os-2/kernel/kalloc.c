@@ -84,11 +84,13 @@ kalloc(void)
 // Nuevo: cuenta cuantas paginas fisicas estan libres en este momento,
 // recorriendo la lista enlazada de paginas libres del asignador.
 // Utilizada por sys_sysinfo (kernel/sysproc.c).
-uint64 kfreepages (void) {
+uint64
+kfreepages(void)
+{
   struct run *r;
   uint64 count = 0;
-  acquire(&kmem.lock);
 
+  acquire(&kmem.lock);
   for (r = kmem.freelist; r; r = r->next)
     count++;
   release(&kmem.lock);
@@ -99,6 +101,8 @@ uint64 kfreepages (void) {
 // Nuevo: calcula el total de paginas fisicas administradas por el
 // asignador (usadas + libres), a partir del rango [end, PHYSTOP)
 // que se le entrega a freerange() en kinit().
-uint64 ktotalpages (void) {
+uint64
+ktotalpages(void)
+{
   return ((uint64)PHYSTOP - PGROUNDUP((uint64)end)) / PGSIZE;
 }

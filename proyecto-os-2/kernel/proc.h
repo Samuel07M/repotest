@@ -101,7 +101,7 @@ struct proc {
   struct file *ofile[NOFILE];  // Open files
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
-
-  // Nuevo
-  char trace_name[16];
+  char trace_name[16];         // Nuevo: nombre (sys_xxx) de la syscall que
+                                // este proceso esta monitoreando; cadena
+                                // vacia ("") significa que no hay trace activo
 };
