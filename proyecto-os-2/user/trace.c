@@ -10,7 +10,7 @@ int main(int argc, char *argv[]) {
 
   // Activa el monitoreo de la syscall solicitada
   if (trace(argv[1]) < 0) {
-    fprintf(2, "trace: no se pudo activar el monitoreo de %s\n", argv[1]);
+    fprintf(2, "trace: syscall invalida o no se pudo activar el monitoreo: %s (ejemplo: sys_kill)\n", argv[1]);
     exit(1);
   }
 

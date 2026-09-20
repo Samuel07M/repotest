@@ -121,6 +121,9 @@ sys_trace(void)
   // Obtiene el nombre de la syscall a monitorear desde el espacio de usuario
   if (argstr(0, name, sizeof(name)) < 0)
     return -1;
+  
+  if (!syscall_exists(name))
+    return -1;
 
   safestrcpy(myproc()->trace_name, name, sizeof(myproc()->trace_name));
 

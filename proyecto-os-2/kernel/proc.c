@@ -290,6 +290,7 @@ kfork(void)
   np->cwd = idup(p->cwd);
 
   safestrcpy(np->name, p->name, sizeof(p->name));
+  safestrcpy(np->trace_name, p->trace_name, sizeof(p->trace_name)); // Nuevo
 
   pid = np->pid;
 

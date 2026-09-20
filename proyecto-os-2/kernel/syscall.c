@@ -171,16 +171,26 @@ static char *syscallnames[] = {
 // (PID, nombre de la syscall, valor de retorno y registros relevantes)
 // cuando la syscall ejecutada coincide con la que el proceso esta
 // monitoreando actualmente.
+int
+syscall_exists(char *name)
+{
+  for (int i = 1; i < NELEM(syscallnames); i++) {
+    if (syscallnames[i] && strncmp(name, syscallnames[i], 16) == 0)
+      return 1;
+  }
+  return 0;
+}
+
 static void
-trace_report(struct proc *p, int num, uint64 ret)
+trace_report(struct proc *p, int num, uint64 ret, uint64 arg0, uint64 arg1)
 {
   printk("PID: %d\n", p->pid);
   printk("SYSCALL: %s\n", syscallnames[num]);
   printk("RETURN: %d\n", (int)ret);
   printk("s0: %p\n", (void *)p->trapframe->s0);
   printk("s1: %p\n", (void *)p->trapframe->s1);
-  printk("a0: %p\n", (void *)p->trapframe->a0);
-  printk("a1: %p\n", (void *)p->trapframe->a1);
+  printk("a0: %p\n", (void *)arg0);
+  printk("a1: %p\n", (void *)arg1);
 }
 
 void
@@ -190,6 +200,8 @@ syscall(void)
   struct proc *p = myproc();
 
   num = p->trapframe->a7;
+  uint64 arg0 = p->trapframe->a0;
+  uint64 arg1 = p->trapframe->a1;
   if (num > 0 && num < NELEM(syscalls) && syscalls[num]) {
     // Use num to lookup the system call function for num, call it,
     // and store its return value in p->trapframe->a0
@@ -200,7 +212,7 @@ syscall(void)
     if (p->trace_name[0] != 0 && num < NELEM(syscallnames) &&
         syscallnames[num] != 0 &&
         strncmp(p->trace_name, syscallnames[num], sizeof(p->trace_name)) == 0) {
-      trace_report(p, num, p->trapframe->a0);
+      trace_report(p, num, p->trapframe->a0, arg0, arg1);
     }
   } else {
     printk("%d %s: unknown sys call %d\n", p->pid, p->name, num);
